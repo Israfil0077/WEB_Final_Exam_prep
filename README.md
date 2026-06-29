@@ -1,210 +1,250 @@
-# JavaScript DOM Manipulation Exam Framework
+# 📚 UIU Web Programming — Final Exam Prep
 
-Whenever you face a JavaScript DOM Manipulation question in an exam, follow this **4-Step Framework**. This approach works for most event-driven problems such as calculators, password validators, guessing games, counters, score trackers, and form validation tasks.
+Solved final exam questions for **CSE 4165 / CSE 465 Web Programming** at United International University (UIU).  
+If you have an exam coming up, this repo is all you need. Every question from 4 past papers is solved and organized by trimester.
 
 ---
 
-## Step 1: HTML Structure & Script Linking
+## 📁 Folder Structure
 
-Keep your **HTML structure** and **JavaScript logic** separate.
+```
+WEB_Final_Exam_prep/
+│
+├── Final_Exam_question_Web_programming.pdf   ← All 4 past papers in one PDF
+│
+├── WEB_Final_243/   ← Fall 2024
+│   ├── Q1/          ← JavaScript: Number Guessing Game
+│   └── Q2/          ← PHP: Pizza Party Calculator
+│
+├── WEB_Final_251/   ← Spring 2025
+│   ├── Q1/          ← JavaScript: Password Strength Checker
+│   ├── Q2/          ← PHP: Venue Booking Calculator
+│   └── Q3/          ← PHP + MySQL: Employee Database (uiutech_final)
+│
+├── WEB_Final_252/   ← Summer 2025
+│   ├── Q1/          ← JavaScript: Calorie Tracker
+│   │   ├── q1.html / q1.js          ← Full solution
+│   │   └── q1_template.html / .js   ← Blank template to practice
+│   ├── Q2/          ← PHP: Movie Screen Calculator
+│   │   ├── q2.php        ← Full solution
+│   │   └── template.php  ← Reusable PHP form template
+│   └── Q3/          ← PHP + MySQL: Sales Database (sundarban)
+│
+└── WEB_Final_253/   ← Fall 2025
+    ├── Q1/          ← JavaScript: (in progress)
+    ├── Q2/          ← PHP: Sales Performance System
+    └── Q3/          ← PHP + MySQL: Library Database (campus_library)
+```
 
-Create the user interface using elements like:
+---
 
-* `<input>`
-* `<button>`
-* `<div>`
-* `<label>`
+## 🧠 Exam Pattern (Read This First)
 
-### Important Rule
+Every paper has **exactly 3 questions** worth **30 marks total**:
 
-Always link your `script.js` file **at the bottom of the `<body>` tag**. This ensures that all HTML elements are loaded before JavaScript tries to access them.
+| Q | Topic | Marks | What it always asks |
+|---|-------|-------|---------------------|
+| 1 | JavaScript | 10 | HTML input + JS function + if/else tiers + attempt counter |
+| 2 | PHP | 10 | HTML form → `$_POST` → `ceil()` math → table output |
+| 3 | PHP + MySQL | 10 | 4 sub-queries: GROUP BY, UPDATE, conditional UPDATE with cap, SELECT with label |
+
+> Once you understand the pattern, every question becomes the same problem with different variable names.
+
+---
+
+## ⚡ Quick Reference
+
+### JavaScript Template (Q1)
+
+Every JS question follows this structure:
+
+```javascript
+// Global variables — must be outside the function
+let total = 0;
+let attempts = 0;
+const GOAL = 2000;
+
+function pass() {
+    let input1 = Number(document.getElementById('input1').value);
+    total += input1;
+    attempts++;
+
+    let msg = '';
+    if (total <= 800)       msg = "You're off to a healthy start!";
+    else if (total <= 1600) msg = "Good progress, keep it balanced!";
+    else if (total < 2000)  msg = "Almost at your limit!";
+    else                    msg = "Goal reached! Stay mindful!";
+
+    // Special rule: too many attempts without reaching goal
+    if (attempts > 10 && total < GOAL) msg = "Be cautious of frequent snacking!";
+
+    document.getElementById('show').innerText = msg;
+    document.getElementById('input1').value = '';  // clear input
+}
+```
 
 ```html
+<!-- HTML side — always the same structure -->
+<input type="number" id="input1">
+<button onclick="pass()">Add</button>
+<p id="show"></p>
+<script src="q1.js"></script>
+```
+
+---
+
+### PHP Template (Q2)
+
+Every PHP question uses `ceil()`. The formula never changes:
+
+```php
+<!DOCTYPE html>
+<html lang="en">
 <body>
-    <input type="text" id="myInput">
-    <button id="myBtn">Submit</button>
-    <div id="output"></div>
+    <form action="" method="POST">
+        input1: <input type="number" name="input1"><br><br>
+        input2: <input type="number" name="input2"><br><br>
+        input3: <input type="number" name="input3"><br><br>
+        <button name="submit">Submit</button>
+    </form>
 
-    <!-- Link JS right before closing body tag -->
-    <script src="script.js"></script>
+    <?php
+    if (isset($_POST['submit'])) {
+        $input1 = (int)$_POST['input1'];
+        $input2 = (int)$_POST['input2'];
+        $input3 = (int)$_POST['input3'];
+
+        // --- your logic here ---
+        $output1 = ceil($input1 / $input2);              // always ceil() for "minimum units"
+        $output2 = ($output1 * $input2) - $input1;       // empty seats / leftover
+        $output3 = $output2 * $input3;                   // wasted money
+
+        echo "<table border='1'>";
+        echo "<tr>
+                <th>Input1</th><th>Input2</th><th>Input3</th>
+                <th>Output1</th><th>Output2</th><th>Output3</th>
+              </tr>";
+        echo "<tr>
+                <td>$input1</td><td>$input2</td><td>$input3</td>
+                <td>$output1</td><td>$output2</td><td>$output3</td>
+              </tr>";
+        echo "</table>";
+    }
+    ?>
 </body>
+</html>
 ```
 
 ---
 
-## Step 2: Global State Management (Memory)
+### MySQL Template (Q3)
 
-If the problem requires you to **keep track of values** across multiple button clicks (such as attempts, scores, totals, or counters), declare those variables in the **global scope**.
+Q3 always has exactly 4 sub-questions. Learn these 4 patterns:
 
-### Why?
+```php
+$conn = new mysqli("localhost", "root", "", "db_name");
+if ($conn->connect_error) die("Failed: " . $conn->connect_error);
 
-Variables declared inside a function reset every time the function runs.
+// Q3.1 — COUNT + GROUP BY (+ HAVING if "only include" appears)
+$sql = "SELECT Status, COUNT(*) AS total
+        FROM book_loans
+        GROUP BY Status
+        HAVING COUNT(*) > 1";
+$result = $conn->query($sql);
+while ($row = $result->fetch_assoc()) {
+    echo $row['Status'] . ": " . $row['total'] . "<br>";
+}
 
-```javascript
-// GLOBAL SCOPE
-let totalAttempts = 0;
-let runningScore = 0;
-```
+// Q3.2 — UPDATE with WHERE condition
+$sql = "UPDATE book_loans
+        SET Status = 'Grace Period', PenaltyFee = 0
+        WHERE Status = 'Overdue' AND DaysOverdue < 7";
+$conn->query($sql);
 
-✅ These values persist between button clicks.
+// Q3.3 — Conditional UPDATE with cap (bonus/penalty)
+// Cap check goes inside WHERE — not in PHP
+$sql = "UPDATE book_loans
+        SET PenaltyFee = PenaltyFee * 1.10
+        WHERE PenaltyFee > 20
+          AND (PenaltyFee * 1.10) <= 50";
+$conn->query($sql);
 
-❌ Do not declare them inside the event listener if they need to remember previous values.
-
----
-
-## Step 3: Event Listeners & Data Extraction
-
-Instead of using `onclick=""` in HTML, use `addEventListener()` in JavaScript.
-
-### Basic Workflow
-
-1. Detect the button click.
-2. Read user input using `.value`.
-3. Convert text to numbers if needed.
-4. Validate the input.
-5. Update the global state.
-
-```javascript
-document.getElementById("myBtn").addEventListener("click", function () {
-
-    // Read input value
-    let inputString = document.getElementById("myInput").value;
-
-    // Convert string to number
-    let userNumber = parseInt(inputString);
-
-    // Validate input
-    if (isNaN(userNumber)) return;
-
-    // Update global state
-    totalAttempts++;
-});
-```
-
-### Key Methods
-
-| Method               | Purpose                        |
-| -------------------- | ------------------------------ |
-| `.value`             | Get input field value          |
-| `parseInt()`         | Convert string to integer      |
-| `parseFloat()`       | Convert string to decimal      |
-| `isNaN()`            | Check if value is not a number |
-| `addEventListener()` | Handle events properly         |
-
----
-
-## Step 4: Logic Processing & UI Updates
-
-After processing the data, display the result back to the user interface.
-
-### Updating Text
-
-```javascript
-document.getElementById("output").innerText = "Success!";
-```
-
-or
-
-```javascript
-document.getElementById("output").innerHTML =
-    "Attempt 1<br>Correct!";
-```
-
-Use:
-
-* `.innerText` → Plain text
-* `.innerHTML` → Text with HTML tags
-
----
-
-### Disabling Elements
-
-Useful for games, login attempts, and validation systems.
-
-```javascript
-document.getElementById("myBtn").disabled = true;
+// Q3.4 — SELECT with label or sort
+$sql = "SELECT BookTitle, SUM(PenaltyFee) AS total_fee
+        FROM book_loans
+        GROUP BY BookTitle
+        ORDER BY total_fee DESC";
+$result = $conn->query($sql);
+while ($row = $result->fetch_assoc()) {
+    echo $row['BookTitle'] . " — " . $row['total_fee'] . "<br>";
+}
 ```
 
 ---
 
-### Regular Expressions (Regex)
+## 🗄️ SQL Files Included
 
-Used for checking specific patterns in strings.
+Import these into phpMyAdmin before running the PHP files:
 
-#### Check for Uppercase Letter
+| File | Database | Table |
+|------|----------|-------|
+| `WEB_Final_251/Q3/employee_final.sql` | `uiutech_final` | `employee_final` |
+| `WEB_Final_252/Q3/sales_data.sql` | `sundarban` | `sales_data` |
+| `WEB_Final_253/Q3/book_loans.sql` | `campus_library` | `book_loans` |
 
-```javascript
-/[A-Z]/.test(password)
-```
-
-#### Check for Lowercase Letter
-
-```javascript
-/[a-z]/.test(password)
-```
-
-#### Check for Number
-
-```javascript
-/[0-9]/.test(password)
-```
+### How to import:
+1. Open **phpMyAdmin** → `http://localhost/phpmyadmin`
+2. Click **Import** tab
+3. Choose the `.sql` file → click **Go**
 
 ---
 
-### Random Number Generation
+## 🛠️ How to Run
 
-Generate a whole number between **Min** and **Max** (inclusive).
+### JavaScript (Q1)
+1. Open the `Q1/` folder
+2. Open `q1.html` directly in your browser — no server needed
 
-```javascript
-Math.floor(Math.random() * (Max - Min + 1)) + Min
-```
+### PHP (Q2)
+1. Move the `Q2/` folder into `htdocs/` (XAMPP) or `www/` (WAMP)
+2. Start Apache from XAMPP/WAMP control panel
+3. Open `http://localhost/Q2/q2.php` in your browser
 
-#### Example
-
-```javascript
-let randomNumber =
-    Math.floor(Math.random() * (10 - 1 + 1)) + 1;
-```
-
-Generates a number between **1 and 10**.
-
----
-
-# Quick Exam Checklist ✅
-
-Before submitting your solution, verify:
-
-* [ ] HTML elements are created correctly.
-* [ ] `script.js` is linked at the bottom of `<body>`.
-* [ ] Global variables are outside functions.
-* [ ] Event listener is attached properly.
-* [ ] Input is extracted using `.value`.
-* [ ] String is converted to a number when needed.
-* [ ] Input validation is performed.
-* [ ] Logic is processed correctly.
-* [ ] UI is updated using `.innerText` or `.innerHTML`.
-* [ ] Buttons/inputs are disabled if required.
-* [ ] Regex is used for pattern checking when needed.
-* [ ] `Math.random()` formula is correct for random numbers.
+### PHP + MySQL (Q3)
+1. Import the `.sql` file into phpMyAdmin first
+2. Move the `Q3/` folder into `htdocs/`
+3. Open `http://localhost/Q3/q3.php` in your browser
 
 ---
 
-## DOM Manipulation Formula to Remember
+## ✅ Exam Day Checklist
 
-```text
-Select Element
-      ↓
-Add Event Listener
-      ↓
-Get Input Value
-      ↓
-Validate Input
-      ↓
-Process Logic
-      ↓
-Update Global State
-      ↓
-Update UI
-```
+- [ ] JS: global variables are **outside** the function
+- [ ] JS: link `<script src="q1.js">` at the **bottom** of `<body>`
+- [ ] JS: clear input after each click → `document.getElementById('input1').value = ''`
+- [ ] PHP: closing tags use **forward slash** `/` not backslash `\`
+- [ ] PHP: all `<td>` and `<th>` tags go **inside** the echo string quotes
+- [ ] PHP: use `ceil()` for "minimum complete units" (screens, venues, pizzas)
+- [ ] MySQL: Q3.3 cap condition goes inside `WHERE`, not in PHP
+- [ ] MySQL: import the `.sql` file before running `q3.php`
 
-Master this workflow, and most DOM manipulation exam questions become much easier to solve.
+---
+
+## 📌 Common Mistakes to Avoid
+
+| Mistake | Fix |
+|---------|-----|
+| `echo "<tr>" <td>$var</td> "</tr>"` | Everything must be inside the quotes: `echo "<tr><td>$var</td></tr>"` |
+| `echo "</table>"` written as `echo "<\table>"` | Use `/` not `\` for closing HTML tags |
+| JS variable declared inside function resets every click | Declare counter/total in **global scope** |
+| PHP form not submitting | Add a space: `action="" method="POST"` not `action=""method="POST"` |
+| MySQL runs before DB is imported | Import `.sql` file in phpMyAdmin first |
+
+---
+
+## 👤 Author
+
+**Israfil** — UIU CSE student  
+Prepared this repo the night before the final. If it helped you, give it a ⭐ and share it with your batch.
+
+> Pull requests welcome — if you solve a missing question (like `WEB_Final_253/Q1`), add it in!
