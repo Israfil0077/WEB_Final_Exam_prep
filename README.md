@@ -199,6 +199,86 @@ Import these into phpMyAdmin before running the PHP files:
 
 ---
 
+## 💻 XAMPP Setup (First Time? Start Here)
+
+XAMPP is a free tool that lets you run PHP and MySQL on your own computer. You need this to run the PHP and MySQL files in this repo.
+
+### Step 1 — Download XAMPP
+
+1. Go to 👉 [https://www.apachefriends.org](https://www.apachefriends.org)
+2. Click **Download** for Windows (or your OS)
+3. Run the installer — keep clicking **Next** with default settings
+4. Install location will be `C:\xampp\` — don't change this
+
+### Step 2 — Start XAMPP
+
+1. Open **XAMPP Control Panel** (search it in Start menu)
+2. Click **Start** next to **Apache** → turns green ✅
+3. Click **Start** next to **MySQL** → turns green ✅
+
+> If Apache doesn't start, port 80 is blocked. Click **Config** → **Apache (httpd.conf)** → find `Listen 80` → change to `Listen 8080`. Then use `http://localhost:8080/` instead of `http://localhost/` everywhere below.
+
+### Step 3 — Put the repo inside htdocs
+
+`htdocs` is the folder where XAMPP looks for your PHP files.
+
+1. Open `C:\xampp\htdocs\`
+2. Clone or paste this entire repo folder there
+
+It should look like this:
+```
+C:\xampp\htdocs\
+└── WEB_Final_Exam_prep-main\
+    ├── WEB_Final_243\
+    ├── WEB_Final_251\
+    ├── WEB_Final_252\
+    └── WEB_Final_253\
+```
+
+### Step 4 — Import SQL files into phpMyAdmin
+
+You need to do this **before** running any Q3 file.
+
+1. Open your browser → go to `http://localhost/phpmyadmin`
+2. Click **New** on the left sidebar → type the database name → click **Create**
+
+| Database name to create | SQL file to import |
+|-------------------------|--------------------|
+| `uiutech_final` | `WEB_Final_251/Q3/employee_final.sql` |
+| `sundarban` | `WEB_Final_252/Q3/sales_data.sql` |
+| `campus_library` | `WEB_Final_253/Q3/book_loans.sql` |
+
+3. Click on the database you just created (left sidebar)
+4. Click the **Import** tab at the top
+5. Click **Choose File** → select the `.sql` file → click **Go**
+6. You should see a success message — the table and data are now loaded
+
+### Step 5 — Open in browser
+
+| File type | Where to open |
+|-----------|--------------|
+| `q1.html` (JavaScript) | Double-click to open directly in browser — no XAMPP needed |
+| `q2.php` (PHP) | `http://localhost/WEB_Final_Exam_prep-main/WEB_Final_243/Q2/q2.php` |
+| `q3.php` (PHP + MySQL) | `http://localhost/WEB_Final_Exam_prep-main/WEB_Final_251/Q3/q3.php` |
+
+**URL pattern to remember:**
+```
+http://localhost/  [folder name]  /  [Q folder]  /  [filename]
+```
+
+**Example URLs for each trimester:**
+```
+http://localhost/WEB_Final_Exam_prep-main/WEB_Final_243/Q2/q2.php
+http://localhost/WEB_Final_Exam_prep-main/WEB_Final_251/Q2/q2.php
+http://localhost/WEB_Final_Exam_prep-main/WEB_Final_251/Q3/q3.php
+http://localhost/WEB_Final_Exam_prep-main/WEB_Final_252/Q2/q2.php
+http://localhost/WEB_Final_Exam_prep-main/WEB_Final_252/Q3/q3.php
+http://localhost/WEB_Final_Exam_prep-main/WEB_Final_253/Q2/q2.php
+http://localhost/WEB_Final_Exam_prep-main/WEB_Final_253/Q3/q3.php
+```
+
+---
+
 ## 🛠️ How to Run
 
 ### JavaScript (Q1)
