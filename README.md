@@ -324,7 +324,7 @@ http://localhost/WEB_Final_Exam_prep-main/WEB_Final_253/Q3/q3.php
 
 ## 👤 Author
 
-**Israfil** — UIU CSE student  
+**Md.Israfil Hossain (ID-0112230585)** — UIU CSE student  
 Prepared this repo the night before the final. If it helped you, give it a ⭐ and share it with your batch.
 
 > Pull requests welcome — if you solve a missing question (like `WEB_Final_253/Q1`), add it in!
